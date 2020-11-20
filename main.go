@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-	dockerRepo := flag.String("docker-repo", "", "Docker repository hosted in dockerhub.io")
-	username := flag.String("username", "", "username registered in dockerhub.io")
-	password := flag.String("password", "", "password registered in dockerhub.io")
+	dockerRepo := flag.String("docker-repo", "", "Docker repository hosted in hub.docker.com")
+	username := flag.String("username", "", "username registered in hub.docker.com")
+	password := flag.String("password", "", "password registered in hub.docker.com")
 	verbose := flag.Bool("verbose", false, "verbose mode")
 
 	flag.Parse()
