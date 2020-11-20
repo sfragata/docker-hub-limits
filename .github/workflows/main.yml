@@ -1,0 +1,33 @@
+name: Golang CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    env:
+      GOPATH: ${{ github.workspace }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go_version: [1.14.x, 1.15.x]
+    steps:
+      - name: checkout  
+        uses: actions/checkout@v2
+        with:
+          path: ./src/github.com/${{ github.repository }}
+      - name: Set up Go ${{ matrix.go_version }}
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go_version }} 
+      - name: Go tests
+        run: |
+          echo "getting dependencies...".
+          go get -v -u ./...
+          cd ./src/github.com/${{ github.repository }}
+          echo "go test for ${{ matrix.os }} and version ${{ matrix.go_version }}".
+          go test -v ./...

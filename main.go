@@ -14,6 +14,7 @@ func main() {
 	dockerRepo := flag.String("docker-repo", "", "Docker repository hosted in dockerhub.io")
 	username := flag.String("username", "", "username registered in dockerhub.io")
 	password := flag.String("password", "", "password registered in dockerhub.io")
+	verbose := flag.Bool("verbose", false, "verbose mode")
 
 	flag.Parse()
 
@@ -27,10 +28,10 @@ func main() {
 		Repository: *dockerRepo,
 		Username:   *username,
 		Password:   *password,
+		Verbose:    *verbose,
 	}
 
-	resp1, resp2, _ := dockerhub.RateLimits(dockerHubInfo)
+	rateLimits, _ := dockerhub.RateLimits(dockerHubInfo)
 
-	fmt.Println(resp1)
-	fmt.Println(resp2)
+	fmt.Printf("Limit: %d \nRemaining: %d \n", rateLimits.Limit, rateLimits.Remaining)
 }
