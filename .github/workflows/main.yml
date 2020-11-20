@@ -16,18 +16,18 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         go_version: [1.15]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2.1.3
+      - name: checkout  
+        uses: actions/checkout@v2
+        with:
+          path: ./src/github.com/${{ github.repository }}
+      - name: Set up Go ${{ matrix.go_version }}
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go_version }} 
       - name: Go tests
         run: |
           echo "getting dependencies...".
           go get -v -u ./...
+          cd ./src/github.com/${{ github.repository }}
           echo "go test for ${{ matrix.os }} and version ${{ matrix.go_version }}".
           go test -v ./...
-
-
-        # with:
-        #   path: ./src/github.com/${{ github.repository }}
-          # cd ./src/github.com/${{ github.repository }}
