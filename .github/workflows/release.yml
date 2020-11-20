@@ -1,7 +1,8 @@
 name: goreleaser
 
 on:
-  release:
+  pull_request:
+  push:
 
 jobs:
   goreleaser:
