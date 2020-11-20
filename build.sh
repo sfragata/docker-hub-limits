@@ -1,3 +1,1 @@
-echo "GOOS=$GOOS"
-echo "GOARCH=$GOARCH"
-go build
+go build -o bin/docker-hub-limits
