@@ -8,8 +8,6 @@ on:
 
 jobs:
   build:
-    # env:
-    #   GOPATH: ${{ github.workspace }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,8 +16,6 @@ jobs:
     steps:
       - name: checkout  
         uses: actions/checkout@v2
-        # with:
-        #   path: ./src/github.com/${{ github.repository }}
       - name: Set up Go ${{ matrix.go_version }}
         uses: actions/setup-go@v2
         with:
@@ -30,4 +26,3 @@ jobs:
           go get -v -u ./...
           echo "go test for ${{ matrix.os }} and version ${{ matrix.go_version }}".
           go test -v ./...
-        # cd ./src/github.com/${{ github.repository }}
