@@ -31,7 +31,18 @@ func main() {
 		Verbose:    *verbose,
 	}
 
-	rateLimits, _ := dockerhub.RateLimits(dockerHubInfo)
+	// Getting token
+	err := dockerhub.Token(&dockerHubInfo)
 
+	if err != nil {
+		log.Fatalf("Error getting token: %v", err)
+	}
+
+	// Getting rate limits
+	rateLimits, err := dockerhub.RateLimits(dockerHubInfo)
+
+	if err != nil {
+		log.Fatalf("Error getting rate limits: %v", err)
+	}
 	fmt.Printf("Limit: %d \nRemaining: %d \n", rateLimits.Limit, rateLimits.Remaining)
 }
