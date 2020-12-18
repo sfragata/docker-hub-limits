@@ -7,25 +7,27 @@ import (
 	"os"
 
 	"github.com/sfragata/docker-hub-limits/dockerhub"
+	"github.com/sfragata/docker-hub-limits/output"
 	"github.com/sfragata/docker-hub-limits/utils"
 )
 
 func main() {
-	dockerRepo := flag.String("docker-repo", "", "Docker repository hosted in hub.docker.com")
+	repository := flag.String("repository", "", "Docker repository hosted in hub.docker.com")
 	username := flag.String("username", "", "username registered in hub.docker.com")
 	password := flag.String("password", "", "password registered in hub.docker.com")
 	verbose := flag.Bool("verbose", false, "verbose mode")
+	outputFormatString := flag.String("output", "", "output format (json, yaml or xml)")
 
 	flag.Parse()
 
-	if utils.IsEmpty(*dockerRepo) {
+	if utils.IsEmpty(*repository) {
 		log.Println("docker-repo is mandatory")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
 	dockerHubInfo := dockerhub.Info{
-		Repository: *dockerRepo,
+		Repository: *repository,
 		Username:   *username,
 		Password:   *password,
 		Verbose:    *verbose,
@@ -44,5 +46,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting rate limits: %v", err)
 	}
-	fmt.Printf("Limit: %d \nRemaining: %d \n", rateLimits.Limit, rateLimits.Remaining)
+
+	if utils.IsNotEmpty(*outputFormatString) {
+		response, err := output.Marshal(*rateLimits, output.Type(*outputFormatString))
+		if err != nil {
+			log.Fatalf("Error creating output %s : %v", *outputFormatString, err)
+		}
+		fmt.Println(response)
+	} else {
+		fmt.Printf("Image: %s | Limit: %d | Remaining: %d\n", dockerHubInfo.Repository, rateLimits.Limit, rateLimits.Remaining)
+	}
 }

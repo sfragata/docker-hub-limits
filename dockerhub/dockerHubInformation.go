@@ -20,6 +20,7 @@ type tokenResponse struct {
 
 //RateLimitsInfo struct
 type RateLimitsInfo struct {
+	ImageName string
 	Limit     int
 	Remaining int
 }

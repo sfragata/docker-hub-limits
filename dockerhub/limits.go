@@ -76,5 +76,5 @@ func RateLimits(dockerHubInfo Info) (*RateLimitsInfo, error) {
 		fmt.Printf("Error, couldn't extract remaining limit [%s]\n", response.Header.Get("Ratelimit-Remaining"))
 	}
 
-	return &RateLimitsInfo{Limit: rateLimit, Remaining: remainingLimit}, nil
+	return &RateLimitsInfo{Limit: rateLimit, Remaining: remainingLimit, ImageName: dockerHubInfo.Repository}, nil
 }
