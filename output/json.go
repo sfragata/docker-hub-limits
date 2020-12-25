@@ -6,13 +6,14 @@ import (
 	"github.com/sfragata/docker-hub-limits/dockerhub"
 )
 
+type jsonOutput struct{}
 type jsonRateLimitsResponse struct {
 	Imagename string `json:"image_name"`
 	Limit     int    `json:"limit"`
 	Remaining int    `json:"remaining"`
 }
 
-func toJSON(rateLimits dockerhub.RateLimitsInfo) (string, error) {
+func (out jsonOutput) toString(rateLimits dockerhub.RateLimitsInfo) (string, error) {
 
 	jsonResponse := jsonRateLimitsResponse{
 		Imagename: rateLimits.ImageName,
