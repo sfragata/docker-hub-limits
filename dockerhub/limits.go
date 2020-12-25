@@ -11,10 +11,10 @@ import (
 )
 
 //RateLimits func token
-func RateLimits(dockerHubInfo Info) (*RateLimitsInfo, error) {
+func RateLimits(dockerHubInfo Info) (RateLimitsInfo, error) {
 
 	if utils.IsEmpty(dockerHubInfo.token) {
-		return nil, fmt.Errorf("Null token")
+		return RateLimitsInfo{}, fmt.Errorf("Null token")
 	}
 
 	// setting URL
@@ -26,13 +26,13 @@ func RateLimits(dockerHubInfo Info) (*RateLimitsInfo, error) {
 	validURL, err := url.Parse(urlRateLimits)
 
 	if err != nil {
-		return nil, err
+		return RateLimitsInfo{}, err
 	}
 
 	request, err := http.NewRequest("HEAD", validURL.String(), nil)
 
 	if err != nil {
-		return nil, err
+		return RateLimitsInfo{}, err
 	}
 
 	request.Header.Add("Authorization", fmt.Sprintf(bearerToken, dockerHubInfo.token))
@@ -48,11 +48,11 @@ func RateLimits(dockerHubInfo Info) (*RateLimitsInfo, error) {
 	response, err := client.Do(request)
 
 	if err != nil {
-		return nil, err
+		return RateLimitsInfo{}, err
 	}
 
 	if response.StatusCode != 200 {
-		return nil, fmt.Errorf("Error: status code: %d", response.StatusCode)
+		return RateLimitsInfo{}, fmt.Errorf("Error: status code: %d", response.StatusCode)
 	}
 	defer response.Body.Close()
 
@@ -76,5 +76,5 @@ func RateLimits(dockerHubInfo Info) (*RateLimitsInfo, error) {
 		fmt.Printf("Error, couldn't extract remaining limit [%s]\n", response.Header.Get("Ratelimit-Remaining"))
 	}
 
-	return &RateLimitsInfo{Limit: rateLimit, Remaining: remainingLimit, ImageName: dockerHubInfo.Repository}, nil
+	return RateLimitsInfo{Limit: rateLimit, Remaining: remainingLimit, ImageName: dockerHubInfo.Repository}, nil
 }

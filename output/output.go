@@ -2,12 +2,23 @@ package output
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/sfragata/docker-hub-limits/dockerhub"
 )
 
 //Type simulate an ENUM
 type Type string
+
+var outputMap = map[Type]outputable{
+	jsonType: jsonOutput{},
+	xmlType:  xmlOutput{},
+	yamlType: yamlOutput{},
+}
+
+type outputable interface {
+	toString(rateLimits dockerhub.RateLimitsInfo) (string, error)
+}
 
 const (
 	//jsonType json type
@@ -21,21 +32,13 @@ const (
 //Marshal get struct and convert to given output type
 func Marshal(rateLimits dockerhub.RateLimitsInfo, outputType Type) (string, error) {
 
-	validationError := outputType.validate()
-	if validationError != nil {
-		return "", validationError
+	output := outputMap[outputType]
+
+	if output == nil {
+		return "", fmt.Errorf("Invalid output %s, valid values are: %s", outputType, printKeys())
 	}
 
-	var response string
-	var err error
-
-	if outputType == jsonType {
-		response, err = toJSON(rateLimits)
-	} else if outputType == xmlType {
-		response, err = toXML(rateLimits)
-	} else if outputType == yamlType {
-		response, err = toYAML(rateLimits)
-	}
+	response, err := output.toString(rateLimits)
 
 	if err != nil {
 		return "", err
@@ -44,11 +47,11 @@ func Marshal(rateLimits dockerhub.RateLimitsInfo, outputType Type) (string, erro
 	return response, nil
 }
 
-// validate if output is valid (extends OutputType type)
-func (outputType Type) validate() error {
-	switch outputType {
-	case jsonType, xmlType, yamlType:
-		return nil
+func printKeys() string {
+	var keys []string
+	for k := range outputMap {
+		keys = append(keys, string(k))
 	}
-	return fmt.Errorf("Output must be `json`, `yaml` or `xml`")
+
+	return strings.Join(keys, ", ")
 }

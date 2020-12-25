@@ -21,7 +21,7 @@ func main() {
 	flag.Parse()
 
 	if utils.IsEmpty(*repository) {
-		log.Println("docker-repo is mandatory")
+		log.Println("repository is mandatory")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -48,7 +48,7 @@ func main() {
 	}
 
 	if utils.IsNotEmpty(*outputFormatString) {
-		response, err := output.Marshal(*rateLimits, output.Type(*outputFormatString))
+		response, err := output.Marshal(rateLimits, output.Type(*outputFormatString))
 		if err != nil {
 			log.Fatalf("Error creating output %s : %v", *outputFormatString, err)
 		}
