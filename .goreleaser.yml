@@ -33,9 +33,14 @@ changelog:
       - '^test:'
 
 brews:
-  - github:
+  -
+    # Name template of the recipe
+    # Default to project name
+    name: docker-hub-limits
+
+    tap:
       owner: sfragata
-      name: homebrew-docker-hub-limits
+      name: homebrew
 
     # Your app's homepage.
     # Default is empty.
@@ -44,3 +49,6 @@ brews:
     # Your app's description.
     # Default is empty.
     description: 'Utility to check docker download rate limits"'
+    commit_author:
+      name: sfragata
+      email: sfragata@gmail.com
