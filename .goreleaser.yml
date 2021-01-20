@@ -13,6 +13,7 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags: -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
 archives:
   - replacements:
       darwin: Darwin
@@ -30,3 +31,16 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+
+brews:
+  - github:
+      owner: sfragata
+      name: homebrew-docker-hub-limits
+
+    # Your app's homepage.
+    # Default is empty.
+    homepage: 'https://github.com/sfragata/docker-hub-limits/'
+
+    # Your app's description.
+    # Default is empty.
+    description: 'Utility to check docker download rate limits"'

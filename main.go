@@ -1,36 +1,65 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
-	"os"
+	"runtime"
 
+	"github.com/integrii/flaggy"
 	"github.com/sfragata/docker-hub-limits/dockerhub"
 	"github.com/sfragata/docker-hub-limits/output"
 	"github.com/sfragata/docker-hub-limits/utils"
 )
 
+// These variables will be replaced by real values when do gorelease
+var (
+	version = "none"
+	date    string
+	commit  string
+)
+
 func main() {
-	repository := flag.String("repository", "", "Docker repository hosted in hub.docker.com")
-	username := flag.String("username", "", "username registered in hub.docker.com")
-	password := flag.String("password", "", "password registered in hub.docker.com")
-	verbose := flag.Bool("verbose", false, "verbose mode")
-	outputFormatString := flag.String("output", "", "output format (json, yaml or xml)")
 
-	flag.Parse()
+	info := fmt.Sprintf(
+		"%s\nDate: %s\nCommit: %s\nOS: %s\nArch: %s",
+		version,
+		date,
+		commit,
+		runtime.GOOS,
+		runtime.GOARCH,
+	)
 
-	if utils.IsEmpty(*repository) {
-		log.Println("repository is mandatory")
-		flag.PrintDefaults()
-		os.Exit(1)
+	flaggy.SetName("docker-hub-limits")
+	flaggy.SetDescription("Utility to check docker download rate limits")
+
+	var repository string
+	flaggy.String(&repository, "r", "repository", "Docker repository hosted in hub.docker.com")
+
+	var username string
+	flaggy.String(&username, "u", "username", "username registered in hub.docker.com")
+
+	var password string
+	flaggy.String(&password, "p", "password", "password registered in hub.docker.com")
+
+	var verbose = false
+	flaggy.Bool(&verbose, "v", "verbose", "verbose mode")
+
+	var outputFormatString string
+	flaggy.String(&outputFormatString, "o", "output", "output format (json, yaml or xml)")
+
+	flaggy.SetVersion(info)
+
+	flaggy.Parse()
+
+	if utils.IsEmpty(repository) {
+		flaggy.ShowHelpAndExit("")
 	}
 
 	dockerHubInfo := dockerhub.Info{
-		Repository: *repository,
-		Username:   *username,
-		Password:   *password,
-		Verbose:    *verbose,
+		Repository: repository,
+		Username:   username,
+		Password:   password,
+		Verbose:    verbose,
 	}
 
 	// Getting token
@@ -47,10 +76,10 @@ func main() {
 		log.Fatalf("Error getting rate limits: %v", err)
 	}
 
-	if utils.IsNotEmpty(*outputFormatString) {
-		response, err := output.Marshal(rateLimits, output.Type(*outputFormatString))
+	if utils.IsNotEmpty(outputFormatString) {
+		response, err := output.Marshal(rateLimits, output.Type(outputFormatString))
 		if err != nil {
-			log.Fatalf("Error creating output %s : %v", *outputFormatString, err)
+			log.Fatalf("Error creating output %s : %v", outputFormatString, err)
 		}
 		fmt.Println(response)
 	} else {
