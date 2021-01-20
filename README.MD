@@ -7,15 +7,14 @@ Utility to check [docker download rate limits](https://docs.docker.com/docker-hu
 ## Usage
 
 ```
-Usage of docker-hub-limits:
-  -output string
-    	output format (json, yaml or xml)
-  -password string
-    	password registered in hub.docker.com
-  -repository string
-    	Docker repository hosted in hub.docker.com
-  -username string
-    	username registered in hub.docker.com
-  -verbose
-    	verbose mode
+docker-hub-limits - Utility to check docker download rate limits
+
+  Flags:
+       --version      Displays the program version string.
+    -h --help         Displays help with available flag, subcommand, and positional value parameters.
+    -r --repository   Docker repository hosted in hub.docker.com
+    -u --username     username registered in hub.docker.com
+    -p --password     password registered in hub.docker.com
+    -v --verbose      verbose mode
+    -o --output       output format (json, yaml or xml)
 ```
