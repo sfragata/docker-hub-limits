@@ -40,7 +40,7 @@ brews:
 
     tap:
       owner: sfragata
-      name: homebrew
+      name: homebrew-tap
 
     # Your app's homepage.
     # Default is empty.
@@ -48,7 +48,7 @@ brews:
 
     # Your app's description.
     # Default is empty.
-    description: 'Utility to check docker download rate limits"'
+    description: 'Utility to check docker download rate limits'
     commit_author:
       name: sfragata
       email: sfragata@gmail.com

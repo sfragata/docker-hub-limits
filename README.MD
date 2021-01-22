@@ -4,6 +4,20 @@ Utility to check [docker download rate limits](https://docs.docker.com/docker-hu
 
 ![Golang CI](https://github.com/sfragata/docker-hub-limits/workflows/Golang%20CI/badge.svg)
 
+## Installation
+
+### Mac
+
+```
+brew tap sfragata/tap
+
+brew install sfragata/tap/docker-hub-limits
+```
+
+### Linux and Windows
+
+get latest release [here](https://github.com/sfragata/docker-hub-limits/releases)
+
 ## Usage
 
 ```
